@@ -8,6 +8,7 @@ import { z } from 'zod';
  */
 const envSchema = z.object({
   VITE_API_URL: z.string().min(1, 'VITE_API_URL обязателен'),
+  VITE_API_WS: z.string().min(1, 'VITE_API_WS обязателен'),
   VITE_API_TIMEOUT: z
     .string()
     .optional()
@@ -29,6 +30,7 @@ if (!parsed.success) {
 
 export const env = {
   apiUrl: parsed.data.VITE_API_URL,
+  apiWs: parsed.data.VITE_API_WS,
   apiTimeout: parsed.data.VITE_API_TIMEOUT,
   appTitle: parsed.data.VITE_APP_TITLE,
   appEnv: parsed.data.VITE_APP_ENV,

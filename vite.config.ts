@@ -29,7 +29,7 @@ export default defineConfig(async ({ mode }) => {
     server: {
       port: 3000,
       strictPort: false,
-      open: true,
+      open: false,
     },
 
     // ─── Сборка ───────────────────────────────────────────────────────────
