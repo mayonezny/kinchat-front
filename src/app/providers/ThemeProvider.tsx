@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 
-import { useTheme } from '@/shared/lib/theme';
+import { useTheme } from '@/shared/utils/theme';
 
 interface ThemeProviderProps {
   children: ReactNode;
