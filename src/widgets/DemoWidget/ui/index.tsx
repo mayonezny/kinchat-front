@@ -10,7 +10,6 @@ import { useShallow } from 'zustand/shallow';
 
 import { useCreatePost, usePost, usePosts } from '@/entities/post';
 import { useCounterStore } from '@/features/counter';
-
 import './demo-widget.scss';
 
 // ─── Схема валидации формы ────────────────────────────────────────────────────

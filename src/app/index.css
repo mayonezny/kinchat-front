@@ -78,6 +78,8 @@
   --space-8: 32px;
   --space-10: 40px;
   --space-12: 48px;
+  --space-14: 56px;
+  --space-16: 64px;
 
   /* “Фасады” паддингов для компонентов */
   --pad-2xs: var(--space-1); /* 4px  */
@@ -86,6 +88,9 @@
   --pad-md: var(--space-4); /* 16px */
   --pad-lg: var(--space-6); /* 24px */
   --pad-xl: var(--space-8); /* 32px */
+  --pad-2xl: var(--space-12); /* 48px */
+  --pad-3xl: var(--space-14); /* 56px */
+  --pad-4xl: var(--space-16); /* 64px */
 
   /* =========================
      Типографика (универсальная)
@@ -154,6 +159,8 @@
   /* Primary (Bright Blue) */
   --primary: oklch(0.6 0.22 255); /* #3b82f6 - Accent blue */
   --primary-foreground: oklch(0.98 0 0); /* #ffffff - White on primary */
+  --primary-hover: oklch(54.364% 0.18882 256.665);
+  --primary-active: oklch(50.51% 0.17791 256.814);
 
   /* Secondary */
   --secondary: oklch(0.18 0.02 260); /* #1e2330 - Secondary bg */
@@ -219,8 +226,10 @@
 
   /* Status Indicators */
   --online: oklch(0.72 0.18 145); /* #22c55e - Online (green) */
-  --offline: oklch(0.5 0 0); /* #737373 - Offline (gray) */
+  --offline: oklch(50% 0 0); /* #737373 - Offline (gray) */
 
+  --badge-blue: oklch(25% 0.08 260);
+  --secondary-text: oklch(57.61% 0.00007 271.152);
   /* ===========================================
    * BORDER RADIUS
    * =========================================== */

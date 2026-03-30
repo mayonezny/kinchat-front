@@ -1,0 +1,50 @@
+@use '@/shared/styles/breakpoints' as *;
+
+// .header {
+//   padding: 12px;
+
+//   @include md {
+//     padding: 24px;
+//   }
+
+//   @include lg {
+//     padding: 32px;
+//   }
+// }
+
+.Header {
+  display: flex;
+  height: clamp(50px, 10dvh, 80px);
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--pad-lg);
+
+  &__name-and-icon {
+    align-items: center;
+    display: flex;
+    gap: var(--space-3);
+    max-height: 100%;
+  }
+
+  &__buttons {
+    display: flex;
+    gap: var(--space-1);
+
+    button {
+      font-size: var(--fs-md);
+      padding: var(--pad-xs) var(--pad-sm);
+    }
+
+    @include xs {
+      gap: var(--space-3);
+    }
+  }
+
+  @include xs {
+    padding: 0 var(--pad-xl);
+  }
+
+  @include sm {
+    padding: 0 var(--pad-3xl);
+  }
+}
