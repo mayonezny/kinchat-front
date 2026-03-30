@@ -135,6 +135,134 @@
   --color-primary-weak: color-mix(in oklab, var(--orange-500) 10%, transparent);
 
   --color-focus: color-mix(in oklab, var(--orange-400) 45%, transparent);
+
+  /*Kinchat auto-design variables: */
+  /* ===========================================
+   * TYPOGRAPHY
+   * =========================================== */
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'Geist Mono', ui-monospace, monospace;
+
+  /* ===========================================
+   * COLOR PALETTE - CORE
+   * =========================================== */
+
+  /* Background & Foreground */
+  --background: oklch(0.12 0.015 260); /* #0f1219 - Main dark bg */
+  --foreground: oklch(0.95 0.01 250); /* #f0f2f5 - Light text */
+
+  /* Primary (Bright Blue) */
+  --primary: oklch(0.6 0.22 255); /* #3b82f6 - Accent blue */
+  --primary-foreground: oklch(0.98 0 0); /* #ffffff - White on primary */
+
+  /* Secondary */
+  --secondary: oklch(0.18 0.02 260); /* #1e2330 - Secondary bg */
+  --secondary-foreground: oklch(0.95 0.01 250); /* #f0f2f5 - Text on secondary */
+
+  /* ===========================================
+   * COLOR PALETTE - SURFACES
+   * =========================================== */
+
+  /* Cards */
+  --card: oklch(0.15 0.02 260); /* #161b26 - Card bg */
+  --card-foreground: oklch(0.95 0.01 250); /* #f0f2f5 - Card text */
+
+  /* Muted (Subtle elements) */
+  --muted: oklch(0.18 0.015 260); /* #1c2130 - Muted bg */
+  --muted-foreground: oklch(0.6 0.02 250); /* #8b92a0 - Muted text */
+
+  /* Popover */
+  --popover: oklch(0.14 0.02 260); /* #141924 - Popover bg */
+  --popover-foreground: oklch(0.95 0.01 250); /* #f0f2f5 - Popover text */
+
+  /* ===========================================
+   * COLOR PALETTE - INTERACTIVE
+   * =========================================== */
+
+  /* Accent */
+  --accent: oklch(0.6 0.22 255); /* #3b82f6 - Same as primary */
+  --accent-foreground: oklch(0.98 0 0); /* #ffffff */
+
+  /* Borders & Inputs */
+  --border: oklch(0.25 0.025 260); /* #2a3142 - Border color */
+  --input: oklch(0.18 0.02 260); /* #1e2330 - Input bg */
+  --ring: oklch(0.6 0.22 255); /* #3b82f6 - Focus ring */
+
+  /* ===========================================
+   * COLOR PALETTE - FEEDBACK
+   * =========================================== */
+
+  /* Destructive (Errors) */
+  --destructive: oklch(0.55 0.2 25); /* #dc2626 - Error red */
+  --destructive-foreground: oklch(0.98 0 0); /* #ffffff */
+
+  /* ===========================================
+   * COLOR PALETTE - SIDEBAR
+   * =========================================== */
+
+  --sidebar: oklch(0.1 0.02 260); /* #0c1018 - Sidebar bg (darker) */
+  --sidebar-foreground: oklch(0.95 0.01 250); /* #f0f2f5 */
+  --sidebar-border: oklch(0.22 0.025 260); /* #252d3d */
+  --sidebar-accent: oklch(0.16 0.02 260); /* #1a2030 - Hover state */
+  --sidebar-accent-foreground: oklch(0.95 0.01 250);
+  --sidebar-primary: oklch(0.6 0.22 255); /* #3b82f6 */
+  --sidebar-primary-foreground: oklch(0.98 0 0);
+  --sidebar-ring: oklch(0.6 0.22 255);
+
+  /* ===========================================
+   * COLOR PALETTE - MESSENGER SPECIFIC
+   * =========================================== */
+
+  /* Messages */
+  --message-sent: oklch(0.6 0.22 255); /* #3b82f6 - Outgoing (blue) */
+  --message-received: oklch(0.2 0.02 260); /* #242b3a - Incoming (dark) */
+
+  /* Status Indicators */
+  --online: oklch(0.72 0.18 145); /* #22c55e - Online (green) */
+  --offline: oklch(0.5 0 0); /* #737373 - Offline (gray) */
+
+  /* ===========================================
+   * BORDER RADIUS
+   * =========================================== */
+
+  --radius: 0.75rem; /* 12px - Default */
+  --radius-sm: 0.5rem; /* 8px  - Small */
+  --radius-md: 0.625rem; /* 10px - Medium */
+  --radius-lg: 0.75rem; /* 12px - Large */
+  --radius-xl: 1rem; /* 16px - Extra Large */
+
+  /* ===========================================
+   * SHADOWS & EFFECTS
+   * =========================================== */
+
+  --shadow-glow-primary: 0 0 40px oklch(0.6 0.22 255 / 0.3);
+  --shadow-glow-accent: 0 0 30px oklch(0.6 0.22 255 / 0.25);
+  --shadow-card: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+
+  /* ===========================================
+   * SPACING (reference)
+   * =========================================== */
+
+  /* Using Tailwind scale:
+   * 1 = 0.25rem (4px)
+   * 2 = 0.5rem  (8px)
+   * 3 = 0.75rem (12px)
+   * 4 = 1rem    (16px)
+   * 5 = 1.25rem (20px)
+   * 6 = 1.5rem  (24px)
+   * 8 = 2rem    (32px)
+   * 10 = 2.5rem (40px)
+   * 12 = 3rem   (48px)
+   * 16 = 4rem   (64px)
+   */
+
+  /* ===========================================
+   * TRANSITIONS
+   * =========================================== */
+
+  --transition-fast: 150ms ease;
+  --transition-base: 200ms ease;
+  --transition-slow: 300ms ease;
 }
 
 *,
