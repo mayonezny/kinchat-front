@@ -28,6 +28,8 @@
 
 **Конфиги** 22. [Конфиги проекта](#22-конфиги-проекта)
 
+**Встроенные хуки** 23. [useTheme — тёмная тема](#23-usetheme--тёмная-тема) 24. [useMediaQuery — адаптив](#24-usemediaquery--адаптив)
+
 ---
 
 ## 1. React Router v7
@@ -3193,32 +3195,271 @@ fetch(env.VITE_API_URL + '/posts');
 
 ---
 
-## Быстрая шпаргалка: что использовать для какой задачи
+## 23. useTheme — тёмная тема
 
-| Задача                              | Библиотека                    |
-| ----------------------------------- | ----------------------------- |
-| Данные с сервера (GET/кэш)          | TanStack Query `useQuery`     |
-| Изменение данных (POST/PUT/DELETE)  | TanStack Query `useMutation`  |
-| UI-состояние (счётчики, модалки)    | Zustand                       |
-| Формы                               | react-hook-form + zodResolver |
-| Валидация                           | Zod                           |
-| Уведомления                         | Sonner `toast.*`              |
-| Роутинг                             | React Router                  |
-| Фильтры/поиск в URL                 | nuqs                          |
-| Таблицы                             | @tanstack/react-table         |
-| Длинные списки (1000+ элементов)    | @tanstack/react-virtual       |
-| Модальные окна / Dropdown / Tooltip | Radix UI                      |
-| Drag & Drop                         | @dnd-kit                      |
-| Дата/время                          | date-fns                      |
-| Переводы                            | i18next / react-i18next       |
-| Иконки                              | Lucide React                  |
-| Условные классы                     | clsx                          |
-| HTTP-запросы                        | Axios (через apiClient)       |
-| Моки API                            | MSW                           |
-| Юнит-тесты                          | Vitest + RTL                  |
-| E2E-тесты                           | Playwright                    |
-| Error Boundary                      | react-error-boundary          |
+**Что это:** Встроенный хук шаблона для управления темой приложения. Хранит выбор пользователя в `localStorage`, поддерживает системную тему и применяет `data-theme` на `<html>`.
+
+**Файл:** `src/shared/lib/theme`
+
+### Режимы темы
+
+| Режим      | Поведение                                                         |
+| ---------- | ----------------------------------------------------------------- |
+| `'light'`  | Всегда светлая                                                    |
+| `'dark'`   | Всегда тёмная                                                     |
+| `'system'` | Следует системной настройке (`prefers-color-scheme`) — **дефолт** |
+
+### Базовое использование
+
+```tsx
+import { useTheme } from '@/shared/lib/theme';
+
+const ThemeToggle = () => {
+  const { resolvedTheme, toggle } = useTheme();
+
+  return <button onClick={toggle}>{resolvedTheme === 'dark' ? '☀️ Светлая' : '🌙 Тёмная'}</button>;
+};
+```
+
+### Полный API
+
+```tsx
+const {
+  mode, // 'light' | 'dark' | 'system' — что выбрал пользователь
+  resolvedTheme, // 'light' | 'dark' — фактическая тема (с учётом system)
+  toggle, // переключает между light ↔ dark
+  setMode, // установить конкретный режим
+} = useTheme();
+```
+
+### Примеры
+
+```tsx
+// Переключатель с тремя режимами
+const { mode, setMode } = useTheme();
+
+<select value={mode} onChange={(e) => setMode(e.target.value as ThemeMode)}>
+  <option value="system">Системная</option>
+  <option value="light">Светлая</option>
+  <option value="dark">Тёмная</option>
+</select>;
+```
+
+```tsx
+// Показать иконку под текущую тему
+import { Moon, Sun } from 'lucide-react';
+const { resolvedTheme } = useTheme();
+
+{
+  resolvedTheme === 'dark' ? <Moon size={18} /> : <Sun size={18} />;
+}
+```
+
+```tsx
+// Разная логика в зависимости от темы
+const { resolvedTheme } = useTheme();
+const chartColors =
+  resolvedTheme === 'dark'
+    ? { bg: '#1a1a2e', line: '#e94560' }
+    : { bg: '#ffffff', line: '#2563eb' };
+```
+
+### Как работает под капотом
+
+1. Состояние `mode` хранится в `localStorage` через `createPersistedStore`
+2. При монтировании и каждом изменении `mode` → применяется `data-theme` на `document.documentElement`
+3. При `mode === 'system'` — подписывается на `MediaQueryList` изменения и обновляет атрибут автоматически
+4. CSS-переменные в `index.css` переопределяются через `[data-theme='dark']` — никакого JS в стилях
+
+### CSS-переменные темы
+
+Все цвета уже адаптированы. Используй семантические токены, а не сырые цвета:
+
+```css
+/* ✅ Правильно — адаптируется автоматически */
+.card {
+  background: var(--color-surface);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+}
+
+/* ❌ Неправильно — жёстко зафиксирован цвет */
+.card {
+  background: #ffffff;
+  color: #101828;
+}
+```
+
+Доступные семантические токены:
+
+| Токен                | Светлая    | Тёмная     |
+| -------------------- | ---------- | ---------- |
+| `--color-bg`         | `#ffffff`  | `#0b0f14`  |
+| `--color-surface`    | `#fcfcfd`  | `#0f141b`  |
+| `--color-surface-2`  | `#f9fafb`  | `#121922`  |
+| `--color-text`       | `#101828`  | `#e6e9ef`  |
+| `--color-text-muted` | `#475467`  | `#a8b0bc`  |
+| `--color-border`     | `#e4e7ec`  | `#273244`  |
+| `--color-primary`    | orange-500 | orange-400 |
 
 ---
 
-_Последнее обновление: 28 марта 2026_
+## 24. useMediaQuery — адаптив
+
+**Что это:** Встроенный хук шаблона для отслеживания CSS media queries в JS. Реагирует на изменения размера окна в реальном времени.
+
+**Файл:** `src/shared/lib/use-media-query.ts`
+
+### Когда использовать хук, а когда CSS
+
+Это ключевой вопрос. Правило простое:
+
+| Сценарий                                           | Инструмент          |
+| -------------------------------------------------- | ------------------- |
+| Изменить отступы, размеры, цвета                   | **CSS media query** |
+| Скрыть/показать элемент через `display: none`      | **CSS media query** |
+| Рендерить **разные компоненты** под разные экраны  | **`useMediaQuery`** |
+| Условная **логика** (разное поведение)             | **`useMediaQuery`** |
+| Передать брейкпоинт в JS-библиотеку (чарты, карты) | **`useMediaQuery`** |
+
+### Брейкпоинты
+
+```ts
+import { breakpoints } from '@/shared/lib/use-media-query';
+
+// Mobile-first, min-width:
+breakpoints.xs; // >= 480px   — большие телефоны
+breakpoints.sm; // >= 640px   — маленькие планшеты
+breakpoints.md; // >= 768px   — планшеты
+breakpoints.lg; // >= 1024px  — ноутбуки
+breakpoints.xl; // >= 1280px  — десктоп
+breakpoints['2xl']; // >= 1536px — широкий десктоп
+// base (нет query) — всё от 0px, включая телефоны 300-479px
+```
+
+### Базовое использование
+
+```tsx
+import { useMediaQuery, breakpoints } from '@/shared/lib/use-media-query';
+
+const Navbar = () => {
+  const isDesktop = useMediaQuery(breakpoints.lg);
+
+  return isDesktop ? <DesktopNav /> : <MobileNav />;
+};
+```
+
+### Примеры
+
+```tsx
+// Адаптивный Grid — количество колонок из JS
+const isTablet = useMediaQuery(breakpoints.md);
+const isDesktop = useMediaQuery(breakpoints.xl);
+
+const columns = isDesktop ? 4 : isTablet ? 2 : 1;
+
+<VirtualGrid columns={columns} ... />
+```
+
+```tsx
+// Мобильное bottom sheet vs десктопный sidebar
+const isMobile = !useMediaQuery(breakpoints.md);
+
+{
+  isMobile ? (
+    <BottomSheet open={open}>
+      <Filters />
+    </BottomSheet>
+  ) : (
+    <Sidebar>
+      <Filters />
+    </Sidebar>
+  );
+}
+```
+
+```tsx
+// Произвольный media query
+const isLandscape = useMediaQuery('(orientation: landscape)');
+const isRetina = useMediaQuery('(min-resolution: 2dppx)');
+const prefersReducedMotion = useMediaQuery('(prefers-reduced-motion: reduce)');
+```
+
+```tsx
+// Не дублируй хук с одинаковым query — вынеси в переменную вверху компонента
+const isDesktop = useMediaQuery(breakpoints.lg);
+
+// Потом используй isDesktop сколько угодно раз
+<header className={isDesktop ? styles.headerDesktop : styles.headerMobile}>
+  {isDesktop && <SearchBar />}
+  ...
+</header>;
+```
+
+### Mobile-first в CSS (без хука)
+
+Для большинства задач хук не нужен — пиши стили снизу вверх:
+
+```css
+.container {
+  /* база = мобилка (0px и выше, включая 300px телефоны) */
+  padding: var(--pad-sm);
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+@media (min-width: 768px) {
+  /* планшет и выше */
+  .container {
+    padding: var(--pad-lg);
+    flex-direction: row;
+    gap: var(--space-6);
+  }
+}
+
+@media (min-width: 1024px) {
+  /* десктоп */
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+}
+```
+
+### Важно: SSR / первый рендер
+
+Хук возвращает `false` до монтирования (на сервере или при SSR). В этом шаблоне используется чистый Vite SPA — проблем нет. Но если добавить SSR (Next.js и т.п.), учитывай возможный layout shift.
+
+---
+
+## Быстрая шпаргалка: что использовать для какой задачи
+
+| Задача                              | Библиотека                      |
+| ----------------------------------- | ------------------------------- |
+| Данные с сервера (GET/кэш)          | TanStack Query `useQuery`       |
+| Изменение данных (POST/PUT/DELETE)  | TanStack Query `useMutation`    |
+| UI-состояние (счётчики, модалки)    | Zustand                         |
+| Формы                               | react-hook-form + zodResolver   |
+| Валидация                           | Zod                             |
+| Уведомления                         | Sonner `toast.*`                |
+| Роутинг                             | React Router                    |
+| Фильтры/поиск в URL                 | nuqs                            |
+| Таблицы                             | @tanstack/react-table           |
+| Длинные списки (1000+ элементов)    | @tanstack/react-virtual         |
+| Модальные окна / Dropdown / Tooltip | Radix UI                        |
+| Drag & Drop                         | @dnd-kit                        |
+| Дата/время                          | date-fns                        |
+| Переводы                            | i18next / react-i18next         |
+| Иконки                              | Lucide React                    |
+| Условные классы                     | clsx                            |
+| HTTP-запросы                        | Axios (через apiClient)         |
+| Моки API                            | MSW                             |
+| Юнит-тесты                          | Vitest + RTL                    |
+| E2E-тесты                           | Playwright                      |
+| Error Boundary                      | react-error-boundary            |
+| Тёмная/светлая тема                 | `useTheme`                      |
+| Адаптив в JS (разные компоненты)    | `useMediaQuery` + `breakpoints` |
+
+---
+
+_Последнее обновление: 30 марта 2026_
