@@ -57,6 +57,7 @@
     "immer": "^11.1.4",
     "lucide-react": "^1.7.0",
     "modern-normalize": "^3.0.1",
+    "msw": "^2.12.14",
     "nuqs": "^2.8.9",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
@@ -94,5 +95,10 @@
     "typescript-eslint": "^8.41.0",
     "vite": "^7.1.2",
     "vitest": "^4.1.2"
+  },
+  "msw": {
+    "workerDirectory": [
+      "public"
+    ]
   }
 }

@@ -21,12 +21,21 @@ const removePreloader = () => {
   }
 };
 
-createRoot(root).render(
-  <StrictMode>
-    <AppProviders>
-      <RouterProvider router={router} />
-    </AppProviders>
-  </StrictMode>,
-);
+const render = () => {
+  createRoot(root).render(
+    <StrictMode>
+      <AppProviders>
+        <RouterProvider router={router} />
+      </AppProviders>
+    </StrictMode>,
+  );
+  removePreloader();
+};
 
-removePreloader();
+if (import.meta.env.DEV) {
+  import('@/shared/api/mocks/browser').then(({ worker }) =>
+    worker.start({ onUnhandledRequest: 'bypass' }).then(render),
+  );
+} else {
+  render();
+}

@@ -146,6 +146,7 @@ export const RegForm = ({ onSwitch, onClose }: AuthFormProps) => {
           type="text"
           id="login"
           placeholder="ivandopulo.kipriansky"
+          autoCapitalize="none"
         />
         <ErrorMessage message={errors.login?.message} />
       </div>

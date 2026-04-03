@@ -1,3 +1,4 @@
+import clsx from 'clsx';
 import type { ReactNode } from 'react';
 import './text.scss';
 
@@ -13,21 +14,22 @@ type Style =
 interface TextProps {
   style: Style;
   children: ReactNode;
+  className?: string;
 }
 
-export const Text = ({ style, children }: TextProps) =>
+export const Text = ({ style, children, className }: TextProps) =>
   style === 'HeadingGrande' ? (
-    <h1 className="big-heading">{children}</h1>
+    <h1 className={clsx('big-heading', className)}>{children}</h1>
   ) : style === 'Heading' ? (
-    <h3 className="heading">{children}</h3>
+    <h3 className={clsx('heading', className)}>{children}</h3>
   ) : style === 'MicroHeading' ? (
-    <h6 className="micro-heading">{children}</h6>
+    <h6 className={clsx('micro-heading', className)}>{children}</h6>
   ) : style === 'UnderHeadingGrande' ? (
-    <p className="under-big-heading">{children}</p>
+    <p className={clsx('under-big-heading', className)}>{children}</p>
   ) : style === 'UnderHeading' ? (
-    <p className="under-heading">{children}</p>
+    <p className={clsx('under-heading', className)}>{children}</p>
   ) : style === 'UnderMicroHeading' ? (
-    <p className="under-micro-heading">{children}</p>
+    <p className={clsx('under-micro-heading', className)}>{children}</p>
   ) : (
-    <p className="message-text">{children}</p>
+    <p className={clsx('message-text', className)}>{children}</p>
   );

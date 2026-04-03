@@ -136,6 +136,14 @@ export default [
     },
   },
 
+  // ─── main.tsx: top-level промис MSW воркера не нуждается в обработке ────────
+  {
+    files: ['src/app/main.tsx'],
+    rules: {
+      '@typescript-eslint/no-floating-promises': 'off',
+    },
+  },
+
   // ─── Переопределения для тестовых файлов ──────────────────────────────────
   {
     files: ['src/**/*.test.{ts,tsx}', 'src/**/*.spec.{ts,tsx}', 'tests/**/*.{ts,tsx}'],

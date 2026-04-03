@@ -1,5 +1,7 @@
 import axios from 'axios';
 
+import { useUserStore } from '@/entities/user';
+import { authApi } from '@/features/authorization';
 import { useAuthStore } from '@/features/authorization/model/auth.store';
 import { env } from '@/shared/config';
 
@@ -27,14 +29,22 @@ api.interceptors.request.use(
 // ─── Response-интерсептор ─────────────────────────────────────────────────────
 api.interceptors.response.use(
   (response) => response,
-  (error: unknown) => {
+  async (error: unknown) => {
     if (axios.isAxiosError(error)) {
       const status = error.response?.status;
 
       // Глобальная обработка ошибок по статус-коду
-      if (status === 401) {
-        // Обработка неавторизованного доступа (например, редирект на логин)
-        console.warn('Unauthorized — редирект на логин');
+      if (status === 401 && !error.config?._retry) {
+        error.config!._retry = true;
+        try {
+          await authApi.refresh();
+          return api.request(error.config!);
+        } catch {
+          useAuthStore.getState().clearToken();
+          useUserStore.getState().clearUser();
+          // тут можно редирект на логин
+          return Promise.reject(error);
+        }
       }
 
       if (status === 403) {

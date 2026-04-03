@@ -14,7 +14,7 @@
 
 .Header {
   display: flex;
-  height: clamp(50px, 10dvh, 80px);
+  height: clamp(70px, 10dvh, 80px);
   align-items: center;
   justify-content: space-between;
   padding: 0 var(--pad-lg);
@@ -37,6 +37,24 @@
 
     @include xs {
       gap: var(--space-3);
+    }
+  }
+
+  &__profile-bar {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    &__profile-pic {
+      width: 32px;
+      height: 32px;
+      border-radius: 100%;
+      border: 1px solid #000;
+    }
+    .name-span {
+      font-weight: 500;
+    }
+    .chevron {
+      color: var(--color-primary-active);
     }
   }
 

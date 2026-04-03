@@ -82,6 +82,7 @@ export const LoginForm = ({ onSwitch, onClose }: AuthFormProps) => {
           type="text"
           id="login"
           placeholder="ivandopulo_kipriansky"
+          autoCapitalize="none"
         />
         <ErrorMessage message={errors.login?.message} />
       </div>
