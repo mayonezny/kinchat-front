@@ -1,7 +1,8 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as Checkbox from '@radix-ui/react-checkbox';
 import * as Label from '@radix-ui/react-label';
-import { ArrowRight, Check } from 'lucide-react';
+import { ArrowRight, Check, Eye, EyeOff } from 'lucide-react';
+import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -14,7 +15,10 @@ import '../../styles/auth-form.scss';
 import './login-form.scss';
 
 const LoginSchema = z.object({
-  email: z.email('Введите коректный email').min(1, 'Введите корректный email'),
+  login: z
+    .string()
+    .min(5, 'Ваш логин не может быть короче 5-ти символов!')
+    .max(30, 'Ваш логин не может быть длиннее 30-ти символов!'),
   password: z.string().min(8, 'Пароль должен быть не короче 8-ми символов!'),
   remember: z.boolean(),
 });
@@ -35,6 +39,8 @@ export const LoginForm = ({ onSwitch, onClose }: AuthFormProps) => {
     },
   });
 
+  const [isPasswordVisible, setPasswordVisible] = useState(false);
+
   const onSubmit = (data: LoginFormValues) => {
     // data — уже провалидированные данные, типизированные
     console.log(data);
@@ -45,29 +51,39 @@ export const LoginForm = ({ onSwitch, onClose }: AuthFormProps) => {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="form">
       <div className="form__form-element">
-        <label className="form__form-element__label" htmlFor="email">
-          Email
+        <label className="form__form-element__label" htmlFor="login">
+          Логин
         </label>
         <input
           className="form__form-element__input"
-          {...register('email')}
-          type="email"
-          id="email"
-          placeholder="ivandopulo@mail.ru"
+          {...register('login')}
+          type="text"
+          id="login"
+          placeholder="ivandopulo_kipriansky"
         />
-        <ErrorMessage message={errors.email?.message} />
+        <ErrorMessage message={errors.login?.message} />
       </div>
       <div className="form__form-element">
         <label className="form__form-element__label" htmlFor="password">
           Пароль
         </label>
-        <input
-          className="form__form-element__input"
-          {...register('password')}
-          type="password"
-          id="password"
-          placeholder="Создайте пароль"
-        />
+        <div className="password-div">
+          <input
+            className="form__form-element__input"
+            {...register('password')}
+            type={isPasswordVisible ? 'text' : 'password'}
+            id="password"
+            placeholder="Создайте пароль"
+          />
+          <button
+            title={isPasswordVisible ? 'Скрыть пароль' : 'Показать пароль'}
+            type="button"
+            className="password-eye"
+            onClick={() => setPasswordVisible((prevState) => !prevState)}
+          >
+            {isPasswordVisible ? <EyeOff /> : <Eye />}
+          </button>
+        </div>
         <ErrorMessage message={errors.password?.message} />
       </div>
       <div className="form__form-element checkbox-field">

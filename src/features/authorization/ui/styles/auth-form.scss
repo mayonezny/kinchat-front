@@ -11,11 +11,30 @@
       background-color: var(--input);
       padding: var(--pad-sm);
       border-radius: var(--radius-md);
+      width: 100%;
     }
     &__label {
       font-size: var(--fs-sm);
       font-weight: var(--fw-semibold);
     }
+  }
+}
+
+.password-div {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: end;
+}
+.password-eye {
+  position: absolute;
+  right: var(--pad-md);
+  color: var(--color-text-muted);
+  transition: color 0.2s ease;
+  &:hover {
+    color: var(--color-text);
+    transition: color 0.2s ease;
+    cursor: pointer;
   }
 }
 
