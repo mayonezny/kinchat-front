@@ -1,5 +1,6 @@
 import axios from 'axios';
 
+import { useAuthStore } from '@/features/authorization/model/auth.store';
 import { env } from '@/shared/config';
 
 export const api = axios.create({
@@ -13,11 +14,13 @@ export const api = axios.create({
 
 // ─── Request-интерсептор ──────────────────────────────────────────────────────
 api.interceptors.request.use(
-  (config) =>
-    // Добавьте auth-токен здесь (замените на свою логику авторизации)
-    // const token = getAuthToken();
-    // if (token) config.headers.Authorization = `Bearer ${token}`;
-    config,
+  (config) => {
+    const token = useAuthStore.getState().token;
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
   (error: unknown) => Promise.reject(error),
 );
 

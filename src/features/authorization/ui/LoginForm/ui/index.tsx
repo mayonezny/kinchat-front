@@ -1,11 +1,14 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as Checkbox from '@radix-ui/react-checkbox';
 import * as Label from '@radix-ui/react-label';
+import type { AxiosError } from 'axios';
 import { ArrowRight, Check, Eye, EyeOff } from 'lucide-react';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
+import { useLoginUser } from '@/features/authorization';
+import type { ErrorResponse } from '@/shared/types';
 import { Button } from '@/shared/ui/Button';
 import { ErrorMessage } from '@/shared/ui/ErrorMessage';
 
@@ -23,16 +26,17 @@ const LoginSchema = z.object({
   remember: z.boolean(),
 });
 
-type LoginFormValues = z.infer<typeof LoginSchema>;
+type LoginFormValue = z.infer<typeof LoginSchema>;
 
 export const LoginForm = ({ onSwitch, onClose }: AuthFormProps) => {
   const {
     register, // привязывает поле к форме
     handleSubmit, // обёртка onSubmit с валидацией
     formState: { errors },
+    setError,
     reset, // сброс формы
     control,
-  } = useForm<LoginFormValues>({
+  } = useForm<LoginFormValue>({
     resolver: zodResolver(LoginSchema), // zod как валидатор
     defaultValues: {
       remember: true,
@@ -41,15 +45,33 @@ export const LoginForm = ({ onSwitch, onClose }: AuthFormProps) => {
 
   const [isPasswordVisible, setPasswordVisible] = useState(false);
 
-  const onSubmit = (data: LoginFormValues) => {
-    // data — уже провалидированные данные, типизированные
-    console.log(data);
-    onClose?.(false);
-    reset(); // очистить форму
+  const { mutate, isPending } = useLoginUser();
+
+  const formRef = useRef<HTMLFormElement>(null);
+  //ПОКА запомнить меня НЕ РАБОТАЕТ - РЕЗУЛЬТАТ С ГАЛОЧКИ НЕ ОТПРАВЛЯЕТСЯ (реализовать на бэке это надо)
+  //как только бэк будет ждать поле remember - убрать его из игнор-значений (след. строка)
+  const onSubmit = ({ remember: _, ...data }: LoginFormValue) => {
+    mutate(data, {
+      onSuccess: () => {
+        onClose?.(false);
+        reset();
+      },
+      onError: (error) => {
+        console.warn(error);
+        const axiosError = error as AxiosError<ErrorResponse>;
+        setError('root', {
+          message: axiosError.response?.data.message ?? 'Ошибка соединения с сервером',
+        });
+        setTimeout(() => {
+          formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
+          formRef.current?.closest('.dialog')?.scrollBy({ top: 50, behavior: 'smooth' });
+        }, 100);
+      },
+    });
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="form">
+    <form ref={formRef} onSubmit={handleSubmit(onSubmit)} className="form">
       <div className="form__form-element">
         <label className="form__form-element__label" htmlFor="login">
           Логин
@@ -108,18 +130,20 @@ export const LoginForm = ({ onSwitch, onClose }: AuthFormProps) => {
         </Label.Root>
       </div>
       <div className="button-acc">
-        <Button type="submit" variant="primary">
+        <Button type="submit" variant="primary" disabled={isPending}>
           <div className="button-child">
-            Войти
+            {isPending ? 'Загрузка...' : 'Войти'}
             <ArrowRight />
           </div>
         </Button>
+
         <div className="placeholder acc-text">
           Нет аккаунта?{' '}
           <button className="acc-text__button" onClick={onSwitch}>
             Зарегистрироваться
           </button>
         </div>
+        <ErrorMessage message={errors.root?.message} className="error-root" />
       </div>
     </form>
   );

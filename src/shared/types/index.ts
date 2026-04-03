@@ -1,3 +1,21 @@
+import type { PublicUser } from '@/entities/user/model/user.types';
+
+export interface ErrorResponse {
+  timestamp: string;
+  status: number;
+  code: string;
+  message: string;
+  path: string;
+}
+
+export interface BaseUserResponse {
+  user: PublicUser;
+}
+
+export interface BaseUtilResponse {
+  message: string;
+}
+
 // ─── Общие утилитарные типы ────────────────────────────────────────────────────
 
 /** Делает указанные ключи обязательными (дополнение к Partial) */

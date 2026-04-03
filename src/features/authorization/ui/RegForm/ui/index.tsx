@@ -1,11 +1,20 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as Checkbox from '@radix-ui/react-checkbox';
 import * as Label from '@radix-ui/react-label';
+import type { AxiosError } from 'axios';
 import { ArrowRight, Check, Eye, EyeOff } from 'lucide-react';
-import { useState, type Dispatch, type MouseEventHandler, type SetStateAction } from 'react';
+import {
+  useRef,
+  useState,
+  type Dispatch,
+  type MouseEventHandler,
+  type SetStateAction,
+} from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
+import { useCreateUser } from '@/features/authorization';
+import type { ErrorResponse } from '@/shared/types';
 import { Button } from '@/shared/ui/Button';
 import { ErrorMessage } from '@/shared/ui/ErrorMessage';
 import '../../styles/auth-form.scss';
@@ -17,11 +26,11 @@ const RegSchema = z
       .string()
       .min(5, 'Ваш логин не может быть короче 5-ти символов!')
       .max(30, 'Ваш логин не может быть длиннее 30-ти символов!'),
-    name: z
+    firstName: z
       .string()
       .min(3, 'Ваше имя короче 3-х символов? Вы - Ян?')
       .max(30, 'Ваше имя длиннее 30-ти символов? Вы Uvuvwevwevwe Onyetenyevwe Ugwemuhwem Osas?'),
-    surname: z
+    lastName: z
       .string()
       .min(3, 'Ваша фамилия короче 3-х символов? Вы - Бо?')
       .max(
@@ -52,6 +61,7 @@ export const RegForm = ({ onSwitch, onClose }: AuthFormProps) => {
     register, // привязывает поле к форме
     handleSubmit, // обёртка onSubmit с валидацией
     formState: { errors },
+    setError,
     reset, // сброс формы
     trigger,
     control,
@@ -65,15 +75,34 @@ export const RegForm = ({ onSwitch, onClose }: AuthFormProps) => {
   const [isPasswordVisible, setPasswordVisible] = useState(false);
   const [isPasswordConfirmVisible, setPasswordConfirmVisible] = useState(false);
 
-  const onSubmit = (data: RegFormValues) => {
-    // data — уже провалидированные данные, типизированные
-    console.log(data);
-    onClose?.(false);
-    reset(); // очистить форму
+  const { mutate, isPending } = useCreateUser();
+
+  const formRef = useRef<HTMLFormElement>(null);
+
+  //ПОКА запомнить меня НЕ РАБОТАЕТ - РЕЗУЛЬТАТ С ГАЛОЧКИ НЕ ОТПРАВЛЯЕТСЯ (реализовать на бэке это надо)
+  //как только бэк будет ждать поле remember - убрать его из игнор-значений (след. строка)
+  const onSubmit = ({ confirmPassword: _, remember: __, ...data }: RegFormValues) => {
+    mutate(data, {
+      onSuccess: () => {
+        onClose?.(false);
+        reset();
+      },
+      onError: (error) => {
+        console.warn(error);
+        const axiosError = error as AxiosError<ErrorResponse>;
+        setError('root', {
+          message: axiosError.response?.data.message ?? 'Ошибка соединения с сервером',
+        });
+        setTimeout(() => {
+          formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
+          formRef.current?.closest('.dialog')?.scrollBy({ top: 50, behavior: 'smooth' });
+        }, 100);
+      },
+    });
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="form">
+    <form ref={formRef} onSubmit={handleSubmit(onSubmit)} className="form">
       <div className="name-n-errors">
         <div className="name-and-surname">
           <div className="form__form-element">
@@ -82,7 +111,7 @@ export const RegForm = ({ onSwitch, onClose }: AuthFormProps) => {
             </label>
             <input
               className="form__form-element__input"
-              {...register('name')}
+              {...register('firstName')}
               type="text"
               id="name"
               placeholder="Ваше имя"
@@ -94,7 +123,7 @@ export const RegForm = ({ onSwitch, onClose }: AuthFormProps) => {
             </label>
             <input
               className="form__form-element__input"
-              {...register('surname')}
+              {...register('lastName')}
               type="text"
               id="surname"
               placeholder="Ваша фамилия"
@@ -102,8 +131,8 @@ export const RegForm = ({ onSwitch, onClose }: AuthFormProps) => {
           </div>
         </div>
         <div className="errors-block">
-          <ErrorMessage message={errors.name?.message} />
-          <ErrorMessage message={errors.surname?.message} />
+          <ErrorMessage message={errors.firstName?.message} />
+          <ErrorMessage message={errors.lastName?.message} />
         </div>
       </div>
 
@@ -190,9 +219,9 @@ export const RegForm = ({ onSwitch, onClose }: AuthFormProps) => {
         </Label.Root>
       </div>
       <div className="button-acc">
-        <Button type="submit" variant="primary">
+        <Button type="submit" variant="primary" disabled={isPending}>
           <div className="button-child">
-            Зарегистрироваться
+            {isPending ? 'Загрузка...' : 'Зарегистрироваться'}
             <ArrowRight />
           </div>
         </Button>
@@ -202,6 +231,7 @@ export const RegForm = ({ onSwitch, onClose }: AuthFormProps) => {
             Войти
           </button>
         </div>
+        <ErrorMessage message={errors.root?.message} className="error-root" />
       </div>
     </form>
   );

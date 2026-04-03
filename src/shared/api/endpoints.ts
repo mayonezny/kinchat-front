@@ -7,9 +7,10 @@ export const endpoints = {
   },
   user: {
     ME: '/auth/me',
-    // update: '/users/me',
+    UPLOAD_AVATAR: '/users/me/avatar',
+  },
+  users: {
     SEARCH: '/users/search',
     SEARCH_USER: '/users/',
-    UPDATE_AVATAR: '/users/me/avatar',
   },
 };
