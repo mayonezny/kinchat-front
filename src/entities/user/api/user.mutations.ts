@@ -9,7 +9,7 @@ export const useUploadAvatar = () => {
 
   return useMutation({
     mutationFn: (data: AvatarUploadDto) => userApi.uploadAvatar(data),
-    onSuccess: ({ user }) => {
+    onSuccess: ({ ...user }) => {
       setUser(user);
     },
   });

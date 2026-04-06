@@ -13,9 +13,9 @@ export const useMe = () =>
     queryFn: async () => {
       const response = await userApi.me();
       console.log(response);
-      console.log(response.user);
-      useUserStore.getState().setUser(response.user);
+      console.log(response);
+      useUserStore.getState().setUser(response);
       return response;
     },
-    select: (data) => data.user,
+    select: (data) => data,
   });

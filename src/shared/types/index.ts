@@ -8,9 +8,7 @@ export interface ErrorResponse {
   path: string;
 }
 
-export interface BaseUserResponse {
-  user: PublicUser;
-}
+export type BaseUserResponse = PublicUser;
 
 export interface BaseUtilResponse {
   message: string;
