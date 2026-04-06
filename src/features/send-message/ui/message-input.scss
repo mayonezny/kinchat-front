@@ -1,0 +1,70 @@
+.message-input {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--pad-sm) var(--pad-md);
+  border-top: 1px solid var(--color-border);
+  background: var(--color-surface);
+
+  &__field {
+    flex: 1;
+    padding: var(--pad-xs) var(--pad-sm);
+    background: var(--color-surface-2);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-xl);
+    font-size: var(--fs-sm);
+    color: var(--color-text);
+    outline: none;
+    resize: none;
+    transition: border-color var(--transition-fast, 150ms ease);
+
+    &:focus {
+      border-color: var(--color-primary);
+    }
+
+    &::placeholder {
+      color: var(--color-text-muted);
+    }
+  }
+
+  &__attach {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    color: var(--color-text-muted);
+    flex-shrink: 0;
+    transition:
+      color var(--transition-fast, 150ms ease),
+      background var(--transition-fast, 150ms ease);
+
+    &:hover {
+      color: var(--color-primary);
+      background: var(--color-primary-ghost);
+    }
+  }
+
+  &__send {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--color-primary);
+    color: #fff;
+    flex-shrink: 0;
+    transition: background var(--transition-fast, 150ms ease);
+
+    &:hover {
+      background: var(--color-primary-hover);
+    }
+
+    &:disabled {
+      background: var(--color-border);
+      cursor: not-allowed;
+    }
+  }
+}

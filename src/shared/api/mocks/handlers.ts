@@ -1,8 +1,8 @@
-import { http, HttpResponse } from 'msw';
+import { http, HttpResponse, ws } from 'msw';
 
 import { endpoints } from '@/shared/api/endpoints';
 
-import { mockAccessToken, mockUser, mockUsers } from './data';
+import { mockAccessToken, mockChats, mockMessages, mockUser, mockUsers } from './data';
 
 const BASE_URL = 'http://localhost:8080/api';
 const url = (path: string) => `${BASE_URL}${path}`;
@@ -166,5 +166,83 @@ export const handlers = [
     }
 
     return HttpResponse.json({ user });
+  }),
+
+  // ─── Chats ───────────────────────────────────────────────────────────────────
+
+  http.get(url(endpoints.chats.GET_USER_CHATS), () =>
+    HttpResponse.json({
+      items: mockChats,
+      page: 0,
+      size: 20,
+      totalElements: mockChats.length,
+      totalPages: 1,
+    }),
+  ),
+
+  http.post(url(endpoints.chat.CREATE_GET_DIRECT_CHAT), () => HttpResponse.json(mockChats[0])),
+
+  http.get(url(`/chats/:chatId/messages`), () =>
+    HttpResponse.json({
+      items: mockMessages,
+      page: 0,
+      size: 30,
+      totalElements: mockMessages.length,
+      totalPages: 1,
+    }),
+  ),
+
+  http.post(url(endpoints.websocket.GET_TICKET), () =>
+    HttpResponse.json({
+      ticket: 'mock-ws-ticket-xyz',
+      wsUrl: 'ws://localhost:8080/ws',
+    }),
+  ),
+];
+
+// ─── WebSocket ───────────────────────────────────────────────────────────────
+
+const chatWs = ws.link('ws://localhost:8080/ws');
+
+export const wsHandlers = [
+  chatWs.addEventListener('connection', ({ client }) => {
+    client.send(
+      JSON.stringify({
+        event: 'connection.ready',
+        data: { login: mockUser.login, serverTime: new Date().toISOString() },
+      }),
+    );
+
+    client.addEventListener('message', ({ data }) => {
+      const envelope = JSON.parse(data as string) as {
+        event: string;
+        data: Record<string, string>;
+      };
+
+      if (envelope.event === 'ping') {
+        client.send(JSON.stringify({ event: 'pong' }));
+        return;
+      }
+
+      if (envelope.event === 'message.send') {
+        const newMessage = {
+          messageId: crypto.randomUUID(),
+          chatId: envelope.data.chatId,
+          sender: mockUser,
+          type: 'TEXT',
+          text: envelope.data.text,
+          attachments: [],
+          createdAt: new Date().toISOString(),
+          clientMessageId: envelope.data.clientMessageId,
+        };
+
+        client.send(
+          JSON.stringify({
+            event: 'message.created',
+            data: newMessage,
+          }),
+        );
+      }
+    });
   }),
 ];

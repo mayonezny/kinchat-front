@@ -16,6 +16,11 @@ export interface BaseUtilResponse {
   message: string;
 }
 
+export interface BasePaginatedRequestQueryParams {
+  page?: number;
+  size?: number;
+}
+
 // ─── Общие утилитарные типы ────────────────────────────────────────────────────
 
 /** Делает указанные ключи обязательными (дополнение к Partial) */

@@ -1,3 +1,5 @@
+import type { UUID } from 'crypto';
+
 export const endpoints = {
   auth: {
     LOGIN: '/auth/login',
@@ -12,5 +14,18 @@ export const endpoints = {
   users: {
     SEARCH: '/users/search',
     SEARCH_USER: '/users/',
+  },
+  chats: {
+    GET_USER_CHATS: '/chats',
+  },
+  chat: {
+    CREATE_GET_DIRECT_CHAT: '/chats/direct',
+    CHAT_MESSAGES: (chatId: UUID) => `/chats/${chatId}/messages`,
+  },
+  message: {
+    ATTACH_FILE_TO_MESSAGE: (chatId: string) => `/chats/${chatId}/attachments`,
+  },
+  websocket: {
+    GET_TICKET: '/ws/tickets',
   },
 };
