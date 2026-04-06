@@ -8,12 +8,14 @@ import { useAuthStore } from '../model/auth.store';
 import type { CreateUserDto, LoginUserDto } from '../model/auth.types';
 
 export const useCreateUser = () => {
+  const queryClient = useQueryClient();
   const setToken = useAuthStore((state) => state.setToken);
   const setUser = useUserStore((state) => state.setUser);
 
   return useMutation({
     mutationFn: (data: CreateUserDto) => authApi.register(data),
-    onSuccess: ({ accessToken, user }) => {
+    onSuccess: async ({ accessToken, user }) => {
+      await queryClient.invalidateQueries({ queryKey: userKeys.me() });
       setToken(accessToken);
       setUser(user);
     },
@@ -21,12 +23,14 @@ export const useCreateUser = () => {
 };
 
 export const useLoginUser = () => {
+  const queryClient = useQueryClient();
   const setToken = useAuthStore((state) => state.setToken);
   const setUser = useUserStore((state) => state.setUser);
 
   return useMutation({
     mutationFn: (data: LoginUserDto) => authApi.login(data),
-    onSuccess: ({ accessToken, user }) => {
+    onSuccess: async ({ accessToken, user }) => {
+      await queryClient.invalidateQueries({ queryKey: userKeys.me() });
       setToken(accessToken);
       setUser(user);
     },
@@ -45,7 +49,6 @@ export const useRefreshUser = () => {
 };
 
 export const useLogoutUser = () => {
-  const queryClient = useQueryClient();
   const clearToken = useAuthStore((state) => state.clearToken);
   const clearUser = useUserStore((state) => state.clearUser);
 
@@ -54,7 +57,6 @@ export const useLogoutUser = () => {
     onSuccess: async () => {
       clearToken();
       clearUser();
-      await queryClient.invalidateQueries({ queryKey: userKeys.me() });
     },
   });
 };
