@@ -6,7 +6,7 @@ import './header.scss';
 
 import { useState } from 'react';
 
-import { useUserStore } from '@/entities/user';
+import { useMe, useUserStore } from '@/entities/user';
 import { useAuthStore } from '@/features/authorization';
 import { Text } from '@/shared/ui/Text';
 
@@ -16,8 +16,8 @@ export const Header = () => {
   const isDesktop = useMediaQuery(breakpoints.xs);
 
   const isAuth = useAuthStore((state) => state.token !== null);
-
   const user = useUserStore((state) => state.user);
+  const { isPending: isUserLoading } = useMe();
 
   const [authModalIsOpen, setAuthModalOpen] = useState(false);
   const [authModalMode, setAuthModalMode] = useState<AuthMode>('register');
@@ -27,7 +27,9 @@ export const Header = () => {
     <div className="Header">
       <BadgeWithName />
       {isAuth ? (
-        <div className="Header__profile-bar">
+        <div
+          className={`Header__profile-bar${isUserLoading ? ' Header__profile-bar--loading' : ''}`}
+        >
           <img
             className="Header__profile-bar__profile-pic"
             src={
@@ -36,12 +38,13 @@ export const Header = () => {
             }
             alt={user ? `${user?.firstName} ${user?.lastName}` : 'Аноним'}
           />
-          <div className="name-bar">
-            <Text
-              style="MicroHeading"
-              className="name-span"
-            >{`${user?.firstName} ${isDesktop ? user?.lastName : ''} `}</Text>
-          </div>
+          {!isUserLoading && (
+            <div className="name-bar">
+              <Text style="MicroHeading" className="name-span">
+                {`${user?.firstName ?? ''} ${isDesktop ? (user?.lastName ?? '') : ''}`}
+              </Text>
+            </div>
+          )}
 
           <AccountDropdown open={accountDropdownIsOpen} onOpenChange={setAccountDropdownOpen} />
         </div>

@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useUserStore } from '@/entities/user';
 import { authApi } from '@/features/authorization';
 import { useAuthStore } from '@/features/authorization/model/auth.store';
+import { endpoints } from '@/shared/api/endpoints';
 import { env } from '@/shared/config';
 
 export const api = axios.create({
@@ -32,9 +33,9 @@ api.interceptors.response.use(
   async (error: unknown) => {
     if (axios.isAxiosError(error)) {
       const status = error.response?.status;
+      const isRefreshRequest = error.config?.url?.includes(endpoints.auth.REFRESH);
 
-      // Глобальная обработка ошибок по статус-коду
-      if (status === 401 && !error.config?._retry) {
+      if (status === 401 && !error.config?._retry && !isRefreshRequest) {
         error.config!._retry = true;
         try {
           await authApi.refresh();
@@ -42,7 +43,6 @@ api.interceptors.response.use(
         } catch {
           useAuthStore.getState().clearToken();
           useUserStore.getState().clearUser();
-          // тут можно редирект на логин
           return Promise.reject(error);
         }
       }

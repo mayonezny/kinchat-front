@@ -25,6 +25,8 @@
 }
 .dropdown {
   min-width: 180px;
+  position: relative;
+  z-index: 200;
   overflow: hidden;
   outline: none;
   background: var(--color-surface);
