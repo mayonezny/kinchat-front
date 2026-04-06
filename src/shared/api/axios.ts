@@ -38,7 +38,9 @@ api.interceptors.response.use(
       if (status === 401 && !error.config?._retry && !isRefreshRequest) {
         error.config!._retry = true;
         try {
-          await authApi.refresh();
+          const { accessToken, user } = await authApi.refresh();
+          useAuthStore.getState().setToken(accessToken);
+          useUserStore.getState().setUser(user);
           return api.request(error.config!);
         } catch {
           useAuthStore.getState().clearToken();

@@ -27,25 +27,26 @@ export const Header = () => {
     <div className="Header">
       <BadgeWithName />
       {isAuth ? (
-        <div
-          className={`Header__profile-bar${isUserLoading ? ' Header__profile-bar--loading' : ''}`}
-        >
-          <img
-            className="Header__profile-bar__profile-pic"
-            src={
-              user?.avatarUrl ??
-              `https://ui-avatars.com/api/?name=${user ? user?.firstName : 'Х'}+${user ? user?.lastName : 'З'}&background=3b82f6&color=fff&bold=true&size=32`
-            }
-            alt={user ? `${user?.firstName} ${user?.lastName}` : 'Аноним'}
-          />
-          {!isUserLoading && (
-            <div className="name-bar">
-              <Text style="MicroHeading" className="name-span">
-                {`${user?.firstName ?? ''} ${isDesktop ? (user?.lastName ?? '') : ''}`}
-              </Text>
-            </div>
+        <div className="Header__profile-bar">
+          {isUserLoading || !user ? (
+            <div className="Header__profile-bar__skeleton" />
+          ) : (
+            <>
+              <img
+                className="Header__profile-bar__profile-pic"
+                src={
+                  user.avatarUrl ??
+                  `https://ui-avatars.com/api/?name=${user.firstName}+${user.lastName}&background=3b82f6&color=fff&bold=true&size=32`
+                }
+                alt={`${user.firstName} ${user.lastName}`}
+              />
+              <div className="name-bar">
+                <Text style="MicroHeading" className="name-span">
+                  {`${user.firstName} ${isDesktop ? user.lastName : ''}`}
+                </Text>
+              </div>
+            </>
           )}
-
           <AccountDropdown open={accountDropdownIsOpen} onOpenChange={setAccountDropdownOpen} />
         </div>
       ) : (
