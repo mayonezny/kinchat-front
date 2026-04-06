@@ -5,6 +5,7 @@ import { useChatMessages, useUserChats } from '@/entities/chat/api/chat.queries'
 import { useUploadAttachment } from '@/entities/message/api/message.mutations';
 import { useMessageSocket } from '@/entities/message/api/message.socket';
 import { MessageList } from '@/entities/message/ui/MessageList';
+import { useMe } from '@/entities/user';
 import { useSendMessage } from '@/features/send-message/api/send-message.socket';
 import { MessageInput } from '@/features/send-message/ui/MessageInput';
 import { toFormData } from '@/shared/utils/to-formData';
@@ -19,6 +20,7 @@ export const ChatWindow = () => {
   useMessageSocket();
 
   const { data, fetchNextPage, hasNextPage } = useChatMessages(chatId!, {});
+  const { data: me } = useMe();
   const { data: chatsData } = useUserChats({ size: 20 });
   const sendMessage = useSendMessage();
   const { mutate: uploadAttachment } = useUploadAttachment();
@@ -34,7 +36,11 @@ export const ChatWindow = () => {
   return (
     <div className="chat-window">
       {participant && <ChatHeader participant={participant} />}
-      <MessageList messages={messages} onScrollTop={() => hasNextPage && fetchNextPage()} />
+      <MessageList
+        messages={messages}
+        currentUserLogin={me?.login}
+        onScrollTop={() => hasNextPage && fetchNextPage()}
+      />
       <MessageInput
         onSendText={(text) => sendMessage(chatId!, text)}
         onSendFile={(file: File) =>

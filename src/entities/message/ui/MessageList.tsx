@@ -1,6 +1,5 @@
 import { useEffect, useRef } from 'react';
 
-import { useUserStore } from '@/entities/user';
 import { Text } from '@/shared/ui/Text';
 
 import type { Message } from '../model/message.types';
@@ -9,11 +8,11 @@ import './message-list.scss';
 
 interface MessageListProps {
   messages: Message[];
+  currentUserLogin?: string;
   onScrollTop?: () => void;
 }
 
-export const MessageList = ({ messages, onScrollTop }: MessageListProps) => {
-  const login = useUserStore((s) => s.user?.login);
+export const MessageList = ({ messages, currentUserLogin, onScrollTop }: MessageListProps) => {
   const bottomRef = useRef<HTMLDivElement>(null);
   const prevLengthRef = useRef(0);
 
@@ -35,7 +34,7 @@ export const MessageList = ({ messages, onScrollTop }: MessageListProps) => {
   return (
     <div className="message-list" onScroll={handleScroll}>
       {messages.map((message) => {
-        const isOwn = message.sender.login === login;
+        const isOwn = message.sender.login === currentUserLogin;
         const mod = isOwn ? 'own' : 'other';
 
         return (

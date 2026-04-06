@@ -1,13 +1,12 @@
+import { useState } from 'react';
+
+import { useMe } from '@/entities/user';
+import { useAuthStore } from '@/features/authorization';
 import { BadgeWithName } from '@/shared/ui/BadgeWithName';
 import { Button } from '@/shared/ui/Button';
 import { breakpoints, useMediaQuery } from '@/shared/utils/use-media-query';
 import { AuthModal, type AuthMode } from '@/widgets/AuthModal';
 import './header.scss';
-
-import { useState } from 'react';
-
-import { useMe, useUserStore } from '@/entities/user';
-import { useAuthStore } from '@/features/authorization';
 import { Text } from '@/shared/ui/Text';
 
 import { AccountDropdown } from './AccountDropdown';
@@ -16,8 +15,7 @@ export const Header = () => {
   const isDesktop = useMediaQuery(breakpoints.xs);
 
   const isAuth = useAuthStore((state) => state.token !== null);
-  const user = useUserStore((state) => state.user);
-  const { isPending: isUserLoading } = useMe();
+  const { isPending: isUserLoading, data: user } = useMe();
 
   const [authModalIsOpen, setAuthModalOpen] = useState(false);
   const [authModalMode, setAuthModalMode] = useState<AuthMode>('register');
@@ -28,9 +26,9 @@ export const Header = () => {
       <BadgeWithName />
       {isAuth ? (
         <div className="Header__profile-bar">
-          {isUserLoading || !user ? (
+          {isUserLoading ? (
             <div className="Header__profile-bar__skeleton" />
-          ) : (
+          ) : user ? (
             <>
               <img
                 className="Header__profile-bar__profile-pic"
@@ -46,7 +44,7 @@ export const Header = () => {
                 </Text>
               </div>
             </>
-          )}
+          ) : null}
           <AccountDropdown open={accountDropdownIsOpen} onOpenChange={setAccountDropdownOpen} />
         </div>
       ) : (
