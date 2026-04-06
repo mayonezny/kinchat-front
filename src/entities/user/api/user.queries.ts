@@ -12,6 +12,7 @@ export const useMe = () =>
     queryKey: userKeys.me(),
     queryFn: async () => {
       const response = await userApi.me();
+      console.log(response);
       useUserStore.getState().setUser(response.user);
       return response;
     },
