@@ -13,6 +13,7 @@ export const useMe = () =>
     queryFn: async () => {
       const response = await userApi.me();
       console.log(response);
+      console.log(response.user);
       useUserStore.getState().setUser(response.user);
       return response;
     },
