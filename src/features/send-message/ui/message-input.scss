@@ -28,7 +28,10 @@
     }
 
     &:focus {
-      border-color: var(--color-primary);
+      border-color: var(--color-border);
+    }
+    &:focus-visible {
+      border-color: var(--color-border);
     }
 
     &::placeholder {

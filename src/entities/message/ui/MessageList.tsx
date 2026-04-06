@@ -1,3 +1,5 @@
+import { useEffect, useRef } from 'react';
+
 import { useUserStore } from '@/entities/user';
 import { Text } from '@/shared/ui/Text';
 
@@ -12,6 +14,17 @@ interface MessageListProps {
 
 export const MessageList = ({ messages, onScrollTop }: MessageListProps) => {
   const login = useUserStore((s) => s.user?.login);
+  const bottomRef = useRef<HTMLDivElement>(null);
+  const prevLengthRef = useRef(0);
+
+  useEffect(() => {
+    if (!messages.length) {
+      return;
+    }
+    const isInitialLoad = prevLengthRef.current === 0;
+    bottomRef.current?.scrollIntoView({ behavior: isInitialLoad ? 'instant' : 'smooth' });
+    prevLengthRef.current = messages.length;
+  }, [messages]);
 
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
     if (e.currentTarget.scrollTop === 0) {
@@ -42,6 +55,7 @@ export const MessageList = ({ messages, onScrollTop }: MessageListProps) => {
           </div>
         );
       })}
+      <div ref={bottomRef} />
     </div>
   );
 };

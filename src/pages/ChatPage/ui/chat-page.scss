@@ -10,7 +10,7 @@
 
     @include md {
       display: flex;
-      border-radius: var(--radius-xl);
+      border-radius: var(--radius-xl) 0 0 0;
     }
   }
 }

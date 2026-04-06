@@ -1,5 +1,6 @@
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
-import { ChevronDown, LogOut, Settings, User2Icon } from 'lucide-react';
+import { ChevronDown, LogOut, MessageSquare, Settings, User2Icon } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 import { useLogoutUser } from '@/features/authorization';
 import './account-dropdown.scss';
@@ -12,6 +13,7 @@ interface DropdownProps {
 
 export const AccountDropdown = ({ open, onOpenChange }: DropdownProps) => {
   const { mutate: logout } = useLogoutUser();
+  const navigate = useNavigate();
   return (
     <DropdownMenu.Root open={open} onOpenChange={onOpenChange}>
       <DropdownMenu.Trigger className="dropdown-trigger">
@@ -19,14 +21,19 @@ export const AccountDropdown = ({ open, onOpenChange }: DropdownProps) => {
       </DropdownMenu.Trigger>
       <DropdownMenu.Content
         className="dropdown"
-        side="bottom" // top | bottom | left | right
-        align="end" // start | center | end
+        side="bottom"
+        align="end"
         sideOffset={12}
         alignOffset={-12}
       >
         <DropdownMenu.Item className="dropdown__item" onClick={() => {}}>
           <User2Icon />
           Профиль
+        </DropdownMenu.Item>
+        <DropdownMenu.Separator className="dropdown__separator" />
+        <DropdownMenu.Item className="dropdown__item" onClick={() => navigate('/chats')}>
+          <MessageSquare />
+          Чаты
         </DropdownMenu.Item>
         <DropdownMenu.Separator className="dropdown__separator" />
         <DropdownMenu.Item className="dropdown__item" onClick={() => {}}>

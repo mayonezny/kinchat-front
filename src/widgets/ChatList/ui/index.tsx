@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { useUserChats } from '@/entities/chat/api/chat.queries';
@@ -45,7 +46,7 @@ const ChatItem = ({ chat, isActive }: { chat: ChatSummary; isActive: boolean }) 
   );
 };
 
-export const ChatList = () => {
+export const ChatList = ({ headerAction }: { headerAction?: ReactNode }) => {
   const { chatId } = useParams<{ chatId: string }>();
   const { data, isLoading } = useUserChats({ size: 20 });
   const chats = data?.pages.flatMap((p) => p.items) ?? [];
@@ -54,6 +55,7 @@ export const ChatList = () => {
     <aside className="chat-list">
       <div className="chat-list__header">
         <span className="chat-list__title">Сообщения</span>
+        {headerAction}
       </div>
       <div className="chat-list__scroll">
         {isLoading && <div className="chat-list__loading">Загрузка...</div>}

@@ -16,9 +16,17 @@ export const mockPeer: PublicUser = {
   avatarUrl: 'https://i.pravatar.cc/150?img=2',
 };
 
+export const mockPeer2: PublicUser = {
+  login: 'eikaaaa',
+  firstName: 'Эйка',
+  lastName: 'Запара',
+  avatarUrl: 'https://i.pravatar.cc/150?img=4',
+};
+
 export const mockUsers: PublicUser[] = [
   mockUser,
   mockPeer,
+  mockPeer2,
   {
     login: 'alexey.petrov',
     firstName: 'Алексей',
