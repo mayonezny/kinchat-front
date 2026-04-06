@@ -1,6 +1,16 @@
+@use '@/shared/styles/breakpoints' as *;
+
 .chat-page {
   display: flex;
   height: 100%;
   overflow: hidden;
-  border-radius: var(--radius-xl);
+
+  .chat-list {
+    display: none;
+
+    @include md {
+      display: flex;
+      border-radius: var(--radius-xl);
+    }
+  }
 }

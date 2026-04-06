@@ -1,6 +1,7 @@
 import { createBrowserRouter } from 'react-router-dom';
 
 import { ChatPage } from '@/pages/ChatPage';
+import { ChatsListPage } from '@/pages/ChatsListPage';
 import { DemoPage } from '@/pages/DemoPage';
 import { HomePage } from '@/pages/HomePage';
 import { MainLayout } from '@/widgets/MainLayout';
@@ -12,6 +13,7 @@ export const router = createBrowserRouter([
     children: [
       { index: true, element: <HomePage /> },
       { path: 'demo', element: <DemoPage /> },
+      { path: 'chats', element: <ChatsListPage /> },
       { path: 'chat/:chatId', element: <ChatPage /> },
     ],
   },

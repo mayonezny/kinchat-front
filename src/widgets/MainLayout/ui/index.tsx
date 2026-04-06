@@ -8,11 +8,14 @@ import './main-layout.scss';
 export const MainLayout = () => {
   useMe();
   const isChatPage = useMatch('/chat/:chatId');
+  const isChatsListPage = useMatch('/chats');
 
   return (
     <div className="main-layout">
       <Header />
-      <main className={`main-layout__main${isChatPage ? ' main-layout__main--no-padding' : ''}`}>
+      <main
+        className={`main-layout__main${isChatPage || isChatsListPage ? ' main-layout__main--no-padding' : ''}`}
+      >
         <Outlet />
       </main>
     </div>
