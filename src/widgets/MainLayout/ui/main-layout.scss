@@ -25,12 +25,18 @@
     flex-direction: column;
     overflow-x: clip;
     padding: var(--pad-xs) var(--pad-lg);
+
     @include xs {
-      padding: var(--pad-sm) var(--pad-xl); // 480px — плавный шаг
+      padding: var(--pad-sm) var(--pad-xl);
     }
 
     @include sm {
-      padding: var(--pad-md) var(--pad-3xl); // 640px — финальный
+      padding: var(--pad-md) var(--pad-3xl);
+    }
+
+    &--no-padding {
+      padding: 0;
+      overflow: hidden;
     }
   }
 

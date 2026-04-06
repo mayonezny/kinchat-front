@@ -1,10 +1,11 @@
 .message-input {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   gap: var(--space-2);
   padding: var(--pad-sm) var(--pad-md);
   border-top: 1px solid var(--color-border);
   background: var(--color-surface);
+  flex-shrink: 0;
 
   &__field {
     flex: 1;
@@ -16,7 +17,15 @@
     color: var(--color-text);
     outline: none;
     resize: none;
+    line-height: var(--lh-normal);
+    max-height: 120px;
+    overflow-y: auto;
+    scrollbar-width: none;
     transition: border-color var(--transition-fast, 150ms ease);
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
 
     &:focus {
       border-color: var(--color-primary);
@@ -36,6 +45,7 @@
     border-radius: 50%;
     color: var(--color-text-muted);
     flex-shrink: 0;
+    -webkit-tap-highlight-color: transparent;
     transition:
       color var(--transition-fast, 150ms ease),
       background var(--transition-fast, 150ms ease);
@@ -56,6 +66,7 @@
     background: var(--color-primary);
     color: #fff;
     flex-shrink: 0;
+    -webkit-tap-highlight-color: transparent;
     transition: background var(--transition-fast, 150ms ease);
 
     &:hover {
@@ -64,6 +75,7 @@
 
     &:disabled {
       background: var(--color-border);
+      color: var(--color-text-muted);
       cursor: not-allowed;
     }
   }

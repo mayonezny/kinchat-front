@@ -4,7 +4,12 @@
   gap: var(--space-1);
   flex: 1;
   overflow-y: auto;
+  scrollbar-width: none;
   padding: var(--pad-md);
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 
   &__bubble-wrap {
     display: flex;
