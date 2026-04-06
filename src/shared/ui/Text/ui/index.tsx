@@ -31,5 +31,5 @@ export const Text = ({ style, children, className }: TextProps) =>
   ) : style === 'UnderMicroHeading' ? (
     <p className={clsx('under-micro-heading', className)}>{children}</p>
   ) : (
-    <p className={clsx('message-text', className)}>{children}</p>
+    <span className={clsx('message-text', className)}>{children}</span>
   );

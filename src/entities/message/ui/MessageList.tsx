@@ -1,4 +1,5 @@
 import { useUserStore } from '@/entities/user';
+import { Text } from '@/shared/ui/Text';
 
 import type { Message } from '../model/message.types';
 
@@ -29,20 +30,15 @@ export const MessageList = ({ messages, onScrollTop }: MessageListProps) => {
             key={message.messageId}
             className={`message-list__bubble-wrap message-list__bubble-wrap--${mod}`}
           >
-            {!isOwn && (
-              <span className="message-list__sender">
-                {message.sender.firstName} {message.sender.lastName}
-              </span>
-            )}
             <div className={`message-list__bubble message-list__bubble--${mod}`}>
-              {message.text}
+              <Text style="MessageText">{message.text}</Text>
+              <span className={`message-list__time message-list__time--${mod}`}>
+                {new Date(message.createdAt).toLocaleTimeString([], {
+                  hour: '2-digit',
+                  minute: '2-digit',
+                })}
+              </span>
             </div>
-            <span className="message-list__time">
-              {new Date(message.createdAt).toLocaleTimeString([], {
-                hour: '2-digit',
-                minute: '2-digit',
-              })}
-            </span>
           </div>
         );
       })}

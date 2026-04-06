@@ -19,7 +19,9 @@ export const ChatWindow = () => {
   const sendMessage = useSendMessage();
   const { mutate: uploadAttachment } = useUploadAttachment();
 
-  const messages = data?.pages.flatMap((page) => page.items) ?? [];
+  const messages = (data?.pages.flatMap((page) => page.items) ?? []).sort(
+    (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
+  );
 
   return (
     <div className="chat-window">
