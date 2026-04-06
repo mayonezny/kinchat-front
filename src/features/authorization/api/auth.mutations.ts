@@ -1,5 +1,6 @@
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
+import { userKeys } from '@/entities/user';
 import { useUserStore } from '@/entities/user/model/user.store';
 
 import { authApi } from './auth.api';
@@ -44,14 +45,16 @@ export const useRefreshUser = () => {
 };
 
 export const useLogoutUser = () => {
+  const queryClient = useQueryClient();
   const clearToken = useAuthStore((state) => state.clearToken);
   const clearUser = useUserStore((state) => state.clearUser);
 
   return useMutation({
     mutationFn: authApi.logout,
-    onSuccess: () => {
+    onSuccess: async () => {
       clearToken();
       clearUser();
+      await queryClient.invalidateQueries({ queryKey: userKeys.me() });
     },
   });
 };

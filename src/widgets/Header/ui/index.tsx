@@ -4,10 +4,10 @@ import { useMe } from '@/entities/user';
 import { useAuthStore } from '@/features/authorization';
 import { BadgeWithName } from '@/shared/ui/BadgeWithName';
 import { Button } from '@/shared/ui/Button';
+import { Text } from '@/shared/ui/Text';
 import { breakpoints, useMediaQuery } from '@/shared/utils/use-media-query';
 import { AuthModal, type AuthMode } from '@/widgets/AuthModal';
 import './header.scss';
-import { Text } from '@/shared/ui/Text';
 
 import { AccountDropdown } from './AccountDropdown';
 
