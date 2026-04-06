@@ -16,6 +16,7 @@ export const useCreateUser = () => {
     mutationFn: (data: CreateUserDto) => authApi.register(data),
     onSuccess: async ({ accessToken, user }) => {
       await queryClient.invalidateQueries({ queryKey: userKeys.me() });
+      queryClient.setQueryData(userKeys.me(), user);
       setToken(accessToken);
       setUser(user);
     },
@@ -31,6 +32,7 @@ export const useLoginUser = () => {
     mutationFn: (data: LoginUserDto) => authApi.login(data),
     onSuccess: async ({ accessToken, user }) => {
       await queryClient.invalidateQueries({ queryKey: userKeys.me() });
+      queryClient.setQueryData(userKeys.me(), user);
       setToken(accessToken);
       setUser(user);
     },
